@@ -1,0 +1,37 @@
+{
+  "name": "koa-movie-review",
+  "version": "1.0.0",
+  "description": "API for a Movie review site",
+  "main": "index.js",
+  "scripts": {
+    "dev": "backpack dev",
+    "build": "backpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/etienne-dldc/koa-movie-review.git"
+  },
+  "keywords": [],
+  "author": "Etienne Dldc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/etienne-dldc/koa-movie-review/issues"
+  },
+  "homepage": "https://github.com/etienne-dldc/koa-movie-review#readme",
+  "devDependencies": {
+    "backpack-core": "^0.8.4"
+  },
+  "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^9.4.0",
+    "cuid": "^2.1.8",
+    "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
+    "knex": "^0.21.5",
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-error": "^3.2.0",
+    "sqlite3": "^5.0.0",
+    "zod": "^1.11.8"
+  }
+}
