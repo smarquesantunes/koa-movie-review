@@ -49,5 +49,31 @@ export async function setupDatabase() {
     ];
 
     await knex.table('movies').insert(movies);
+
+    const reviews = [
+      {
+        review_id: uuid(),
+        movie_id: movies[0].movie_id,
+        author: 'Caryn James',
+        rating: 91,
+        comment: "It's just grade-A filmmaking.",
+      },
+      {
+        review_id: uuid(),
+        movie_id: movies[0].movie_id,
+        author: 'Sarah',
+        rating: 80,
+        comment: 'One of the best movies of 2010.',
+      },
+      {
+        review_id: uuid(),
+        movie_id: movies[1].movie_id,
+        author: 'Andrew',
+        rating: 99,
+        comment: "Arrival showcases the best performance you'll see by Amy Adams.",
+      },
+    ];
+
+    await knex.table('reviews').insert(reviews);
   }
 }
