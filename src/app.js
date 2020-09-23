@@ -5,6 +5,7 @@ import bodyparser from 'koa-bodyparser';
 import errorHandler from 'koa-error';
 import { setupDatabase } from './database/setup';
 import { router } from './routes';
+import helmet from 'koa-helmet';
 
 export async function main() {
   // setup database before starting the app !
@@ -15,6 +16,7 @@ export async function main() {
 
   app.use(cors());
   app.use(errorHandler({ accepts: ['json'] }));
+  app.use(helmet());
   app.use(bodyparser({ enableTypes: ['json'] }));
 
   app.use(router.routes(), router.allowedMethods());

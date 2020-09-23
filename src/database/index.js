@@ -1,12 +1,12 @@
 import { knex } from './connection';
 import uuid from '@lukeed/uuid';
 
-export async function insertMovie(title, year, posterUrl) {
+export async function insertMovie(title, year, poster_url) {
   const movie = {
     movie_id: uuid(),
     title,
     year,
-    poster_url: posterUrl,
+    poster_url,
   };
   await knex.table('movies').insert(movie);
   return movie;
@@ -37,7 +37,7 @@ export async function insertReview(movieId, author, rating, comment) {
 export async function findAllMovies() {
   return knex
     .select('movies.*')
-    .count('*', { as: 'reviews_count' })
+    .count('reviews.review_id', { as: 'reviews_count' })
     .from('movies')
     .leftJoin('reviews', 'movies.movie_id', 'reviews.movie_id')
     .groupBy('movies.movie_id');
@@ -56,6 +56,10 @@ export async function findMovie(movieId) {
     .groupBy('movies.movie_id')
     .where('movies.movie_id', movieId)
     .first();
+}
+
+export async function movieExist(movieId) {
+  return await knex.count('*').from('movies').where('movies.movie_id', movieId).first();
 }
 
 export async function findMovieReviews(movieId) {

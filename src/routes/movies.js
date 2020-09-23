@@ -1,7 +1,8 @@
 import Router from '@koa/router';
 import { findAllMovies, findMovie, insertMovie, updateMovie } from '../database';
-import { zodValidator } from '../middlewares/zodValidator';
+import { zodBodyValidator } from '../middlewares/zodBodyValidator';
 import * as z from 'zod';
+import { allUndefined } from '../utils';
 
 export const moviesRouter = Router();
 
@@ -12,33 +13,36 @@ moviesRouter.get('/', async (ctx) => {
 
 moviesRouter.post(
   '/',
-  zodValidator(
+  zodBodyValidator(
     z.object({
       title: z.string().nonempty(),
       year: z.number().int(),
-      posterUrl: z.string().optional(),
+      poster_url: z.string().optional(),
     })
   ),
   async (ctx) => {
-    const { title, year, posterUrl = null } = ctx.request.body;
-    const movie = await insertMovie(title, year, posterUrl);
+    const { title, year, poster_url = null } = ctx.request.body;
+    const movie = await insertMovie(title, year, poster_url);
     ctx.body = movie;
   }
 );
 
 moviesRouter.put(
-  '/',
-  zodValidator(
+  '/:movieId',
+  zodBodyValidator(
     z.object({
       title: z.string().nonempty().optional(),
       year: z.number().int().optional(),
-      posterUrl: z.string().optional(),
+      poster_url: z.string().optional(),
     })
   ),
   async (ctx) => {
     const { movieId } = ctx.params;
-    const { title, year, posterUrl } = ctx.request.body;
-    const movie = await updateMovie(movieId, { title, year, posterUrl });
+    const { title, year, poster_url } = ctx.request.body;
+    if (allUndefined(title, year, poster_url)) {
+      return ctx.throw(400, 'Empty update');
+    }
+    const movie = await updateMovie(movieId, { title, year, poster_url });
     ctx.body = movie;
   }
 );
