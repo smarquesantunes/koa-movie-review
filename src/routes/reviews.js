@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { movieExist, insertReview, updateMovie, findMovieReviews } from '../database';
+import { movieExist, insertReview, updateMovie, findMovieReviews, updateReview } from '../database';
 import { zodBodyValidator } from '../middlewares/zodBodyValidator';
 import { zodQueryValidator } from '../middlewares/zodQueryValidator';
 import * as z from 'zod';
@@ -11,24 +11,24 @@ reviewsRouter.post(
   '/',
   zodBodyValidator(
     z.object({
-      movieId: z.string().uuid(),
+      movie_id: z.string().uuid(),
       author: z.string().nonempty(),
       rating: z.number().int().min(0).max(100),
       comment: z.string(),
     })
   ),
   async (ctx) => {
-    const { movieId, author, rating, comment } = ctx.request.body;
-    if (!(await movieExist(movieId))) {
+    const { movie_id, author, rating, comment } = ctx.request.body;
+    if (!(await movieExist(movie_id))) {
       return ctx.throw(404, 'Movie not found');
     }
-    const review = await insertReview(movieId, author, rating, comment);
+    const review = await insertReview(movie_id, author, rating, comment);
     ctx.body = review;
   }
 );
 
 reviewsRouter.put(
-  '/:reviewId',
+  '/:review_id',
   zodBodyValidator(
     z.object({
       author: z.string().nonempty().optional(),
@@ -37,18 +37,22 @@ reviewsRouter.put(
     })
   ),
   async (ctx) => {
-    const { reviewId } = ctx.params;
+    const { review_id } = ctx.params;
     const { author, rating, comment } = ctx.request.body;
     if (allUndefined(author, rating, comment)) {
       return ctx.throw(400, 'Empty update');
     }
-    const review = await updateMovie(reviewId, { author, rating, comment });
+    const review = await updateReview(review_id, { author, rating, comment });
     ctx.body = review;
   }
 );
 
-reviewsRouter.get('/', zodQueryValidator(z.object({ movieId: z.string().uuid() })), async (ctx) => {
-  const { movieId } = ctx.request.query;
-  const reviews = await findMovieReviews(movieId);
-  ctx.body = reviews;
-});
+reviewsRouter.get(
+  '/',
+  zodQueryValidator(z.object({ movie_id: z.string().uuid() })),
+  async (ctx) => {
+    const { movie_id } = ctx.request.query;
+    const reviews = await findMovieReviews(movie_id);
+    ctx.body = reviews;
+  }
+);

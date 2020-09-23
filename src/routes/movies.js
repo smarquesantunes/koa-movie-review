@@ -28,7 +28,7 @@ moviesRouter.post(
 );
 
 moviesRouter.put(
-  '/:movieId',
+  '/:movie_id',
   zodBodyValidator(
     z.object({
       title: z.string().nonempty().optional(),
@@ -37,19 +37,19 @@ moviesRouter.put(
     })
   ),
   async (ctx) => {
-    const { movieId } = ctx.params;
+    const { movie_id } = ctx.params;
     const { title, year, poster_url } = ctx.request.body;
     if (allUndefined(title, year, poster_url)) {
       return ctx.throw(400, 'Empty update');
     }
-    const movie = await updateMovie(movieId, { title, year, poster_url });
+    const movie = await updateMovie(movie_id, { title, year, poster_url });
     ctx.body = movie;
   }
 );
 
-moviesRouter.get('/:movieId', async (ctx) => {
-  const { movieId } = ctx.params;
-  const movie = await findMovie(movieId);
+moviesRouter.get('/:movie_id', async (ctx) => {
+  const { movie_id } = ctx.params;
+  const movie = await findMovie(movie_id);
   if (!movie) {
     return ctx.throw(404, 'Movie not found');
   }
