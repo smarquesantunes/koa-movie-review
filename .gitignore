@@ -147,6 +147,9 @@ dist
 !.vscode/extensions.json
 *.code-workspace
 
+### Intellij Idea Ultimate ###
+.idea
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
